@@ -1,6 +1,6 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { cleanObject } from "../../utils"
+import { cleanObject, useMount, useDebounce } from "../../utils"
 import { List } from "./list"
 import { SearchPanel } from "./search-panel"
 import * as qs from "qs";
@@ -11,9 +11,10 @@ export const ProjectListScreen = () => {
         name:'',
         personId: ''
     });
+
     const [list, setList] = useState([])
     const [users, setUsers] = useState([]);
-
+    const debouncedParam = useDebounce(param, 800);
     /* useEffect(()=> {
         fetch(`${apiUrl}/projects`).then(res => {
             if(res.ok){
@@ -26,14 +27,14 @@ export const ProjectListScreen = () => {
 
     useEffect(()=> {
        const fetchList = async() => {
-            const res = await fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(param))}`);
+            const res = await fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`);
             if(res.ok) {
                 const list = await res.json();
                 setList(list);
             }
        }
        fetchList();
-    }, [param])
+    }, [debouncedParam])
 
     /* useEffect(()=> {
         fetch(`${apiUrl}/users`).then(res => {
@@ -43,9 +44,9 @@ export const ProjectListScreen = () => {
                 })
             }
         })
-    }, [param]) */
+    }, []) */
 
-    useEffect(()=> {
+    useMount(()=> {
         const fetchUsers = async() => {
             const res = await fetch(`${apiUrl}/users`);
             if(res.ok) {
@@ -54,7 +55,7 @@ export const ProjectListScreen = () => {
             }
         }
         fetchUsers();
-    }, [param])
+    })
 
     return <div>
         <SearchPanel param={param} setParam={setParam} users={users} setUsers={setUsers}/>
