@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
-export const valueIsTrue = (value) => value === 0 ? true : !!value;
+export const valueIsTrue = (value: any) => value === 0 ? true : !!value;
 
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
     const result = {...object};
     Object.keys(result).forEach(key => {
+        // @ts-ignore
         const value = result[key];
         if(!valueIsTrue(value)) {
+            // @ts-ignore
             delete result[key]
         }
     })
@@ -14,14 +16,14 @@ export const cleanObject = (object) => {
 }
 
 
-export const useMount = (func) => {
+export const useMount = (func: () => void) => {
     useEffect(() => {
         func()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 } 
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: any, delay?: number) => {
      const [debouncedValue, setDebouncedValue] = useState(value);
 
      useEffect(() => {
